@@ -3,14 +3,14 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const GoogleLoginButton = () => {
   const handleSuccess = async (credentialResponse) => {
-    const tokenId = credentialResponse.credential; 
+    const tokenId = credentialResponse.credential;
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/google/callback', {
-        method: 'POST', 
+      const res = await fetch('http://localhost:5000/auth/google/callback', {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokenId}`, 
+          Authorization: `Bearer ${tokenId}`,
         },
       });
 
@@ -33,14 +33,14 @@ const GoogleLoginButton = () => {
     <GoogleLogin
       onSuccess={handleSuccess}
       onFailure={handleFailure}
-      logo="path_to_your_logo" 
+      logo="path_to_your_logo"
     />
   );
 };
 
 const App = () => {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <h1>Google Authentication</h1>
       <GoogleLoginButton />
     </GoogleOAuthProvider>
