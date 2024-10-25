@@ -1,50 +1,33 @@
-import React from 'react';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import AppRoutes from "./routes/routes";
+import { ThemeProviderComponent } from "./components/applayout/dateTheme";
+import Loader from "./components/Loader/loader";
 
-const GoogleLoginButton = () => {
-  const handleSuccess = async (credentialResponse) => {
-    const tokenId = credentialResponse.credential; 
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
 
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/google/callback', {
-        method: 'POST', 
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokenId}`, 
-        },
-      });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100);
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log('Login successful:', data);
-      } else {
-        console.error('Login failed:', res.statusText);
-      }
-    } catch (error) {
-      console.error('Error during Google login:', error);
-    }
-  };
+    return () => clearTimeout(timer);
+  }, []);
 
-  const handleFailure = (error) => {
-    console.error('Login failed:', error);
-  };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <GoogleLogin
-      onSuccess={handleSuccess}
-      onFailure={handleFailure}
-      logo="path_to_your_logo" 
-    />
+    <ThemeProviderComponent>
+      <BrowserRouter>
+        <Toaster position="top-center" reverseOrder={false} />
+        <AppRoutes />
+      </BrowserRouter>
+    </ThemeProviderComponent>
   );
-};
-
-const App = () => {
-  return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <h1>Google Authentication</h1>
-      <GoogleLoginButton />
-    </GoogleOAuthProvider>
-  );
-};
+}
 
 export default App;
