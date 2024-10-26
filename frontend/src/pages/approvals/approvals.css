@@ -1,0 +1,91 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 16px; 
+}
+
+.card {
+    background-color: var(--background-2);
+    border: 1px solid rgba(128, 128, 128, 0.219);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    /* padding: 10px; */
+}
+
+ .card-body, .card-footer {
+    padding: 10px;
+}
+.card-header {
+    font-size: 1.2em;
+    color: #00b7ff; 
+    font-weight: 600;
+}
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; 
+    }
+}
+hr{
+    width: 100%;
+    
+}
+
+.approve-btn, .reject-btn {
+    background-color: #287eb818;
+    color: white;
+    border: none;
+    /* border-radius: 5px; */
+    border-radius: 10px 0px 0px 10px;
+
+    padding: 5px 10px;
+    cursor: pointer;
+    height: 100%;
+}
+
+.reject-btn {
+    background-color: #f443361a; 
+}
+
+.description{
+    padding: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.219);
+    background-color: var(--background-1);
+    border-radius: 5px;
+}
+.project{
+    font-size: 18px;
+    font-weight: 600;
+}
+.card-pic{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.card-pics{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    justify-content: space-between;
+}
+
+
+.ar-button{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.filter-section{
+    display: flex;
+    gap: 20px;
+}
