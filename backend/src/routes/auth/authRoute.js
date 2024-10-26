@@ -35,29 +35,28 @@ router.post('/google/callback', async (req, res) => {
     const user = await findUserByEmail(email);
 
     if (user) {
-      let tokenData;
+      let tokenData = {
+        name: user.name,
+        gmail: user.gmail,
+        profile: picture,
+        role: user.role,
+      };
+
+      // Add role-specific properties
       if (user.role === 2) {
-        tokenData = {
-          name: user.name,
+        Object.assign(tokenData, {
           reg_no: user.reg_no,
-          gmail: user.gmail,
           department: user.department,
           year: user.year,
-          profile: picture,
-          role: user.role,
-        };
+        });
       } else if (user.role === 1) {
-        tokenData = {
-          name: user.name,
+        Object.assign(tokenData, {
           staff_id: user.staff_id,
-          gmail: user.gmail,
-          profile: picture,
-          role: user.role,
-        };
+        });
       }
 
       const jwtToken = jwt.sign(
-        { exp: Math.floor(Date.now() / 1000) + (60 * 60) }, 
+        { exp: Math.floor(Date.now() / 1000) + 60 * 60 }, // 1-hour expiry
         jwtSecret
       );
 

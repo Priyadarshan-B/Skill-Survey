@@ -21,7 +21,7 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
   const [activeItem, setActiveItem] = useState("");
   const [sidebarItems, setSidebarItems] = useState([]);
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const basePath = import.meta.env.VITE_BASE_PATH;
 
   useEffect(() => {
@@ -30,10 +30,10 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
         const encryptedData = localStorage.getItem('D!');
         const decryptedData = decryptData(encryptedData);
         const { role: roleid } = decryptedData; 
-        console.log("Decrypted Role ID:", roleid);
+        // console.log("Decrypted Role ID:", roleid);
 
         const response = await requestApi("POST", `/resource`, { role: roleid });
-        console.log(response)
+        // console.log(response)
         if (response.success) {
           setSidebarItems(response.data); 
         } else {
@@ -65,7 +65,7 @@ function SideBar({ open, resource, onSidebarItemSelect, handleSideBar }) {
         backgroundColor: "#2a3645",
       }}
     >
-      <p style={{ color: 'white' }} className="a-name">Mark Entry</p>
+      <p style={{ color: 'white' }} className="a-name">Skill Survey</p>
       <ul className="list-div">
         {sidebarItems.map((item) => (
           <li

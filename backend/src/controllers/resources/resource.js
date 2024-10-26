@@ -15,7 +15,7 @@ try{
   ORDER BY order_by
 `
 const resource = await query(sql, [role])
-res.json(resource)
+res.status(200).json(resource)
 }
 catch(err){
   console.error("Error fetching resources", err);

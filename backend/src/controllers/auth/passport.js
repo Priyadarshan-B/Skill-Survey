@@ -44,8 +44,6 @@ module.exports = passport;
 
 
 
-
-
 // const passport = require("passport");
 // const GoogleStrategy = require("passport-google-oauth20").Strategy;
 // const { query } = require('./db_utils'); // Import the query function from db_utils

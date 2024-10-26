@@ -1,8 +1,13 @@
-import React from 'react';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import CryptoJS from 'crypto-js';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import CryptoJS from "crypto-js";
+import axios from "axios";
+import TopBar from "../../components/applayout/TopBar";
+import llogin from "../../assets/l-login.gif";
+import dlogin from "../../assets/d-login.gif";
+import requestApi from "../../components/utils/axios";
+import { useNavigate } from "react-router-dom";
+import "./login.css";
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
@@ -12,13 +17,12 @@ const GoogleLoginButton = () => {
     const secretKey = import.meta.env.VITE_ENCRYPT_KEY;
 
     try {
-      // Send token to backend for validation and get encrypted user data
       const res = await axios.post(
         `${import.meta.env.VITE_API_HOST}/auth/google/callback`,
         {},
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${tokenId}`,
           },
         }
@@ -26,58 +30,63 @@ const GoogleLoginButton = () => {
 
       if (res.status === 200) {
         const { d } = res.data;
-        localStorage.setItem('D!', d);
+        localStorage.setItem("D!", d);
 
-        // Decrypt user data
         const bytes = CryptoJS.AES.decrypt(d, secretKey);
         const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        console.log('Decrypted User Data:', decryptedData);
 
-        // Fetch resources based on role
-        const resourceRes = await axios.post(
-          `${import.meta.env.VITE_API_HOST}/resource`,
-          { role: decryptedData.role },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${tokenId}`,
-            },
-          }
-        );
+        const resourceRes = await requestApi("POST", `/resource`, {
+          role: decryptedData.role,
+        });
 
-        if (resourceRes.status === 200) {
+        if (resourceRes.success) {
           const resources = resourceRes.data;
-          console.log('Resources:', resources);
-
-          // Navigate to the path of the first resource
           if (resources.length > 0 && resources[0].path) {
             navigate(resources[0].path);
           } else {
-            console.error('No path available in resources');
+            console.error("No path available in resources");
           }
         }
       } else {
-        console.error('Login failed:', res.statusText);
+        console.error("Login failed:", res.statusText);
       }
     } catch (error) {
-      console.error('Error during Google login:', error);
+      console.error("Error during Google login:", error);
     }
   };
 
   return (
     <GoogleLogin
       onSuccess={handleSuccess}
-      onError={() => console.error('Login failed')}
+      onError={() => console.error("Login failed")}
     />
   );
 };
 
 const Login = () => {
+  const [themeGif, setThemeGif] = useState(llogin);
+
+  useEffect(() => {
+    const preferredTheme = localStorage.getItem("preferredTheme");
+    setThemeGif(preferredTheme === "dark" ? dlogin : llogin);
+  }, []);
+
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <h1>Google Authentication</h1>
-      <GoogleLoginButton />
-    </GoogleOAuthProvider>
+    <div>
+      <div className="login-top">
+        <TopBar />
+      </div>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <div className="login-container">
+          <div className="login-card">
+            <img src={themeGif} alt="login animation" className="login-gif" />
+            <div className="google-login-button">
+              <GoogleLoginButton />
+            </div>
+          </div>
+        </div>
+      </GoogleOAuthProvider>
+    </div>
   );
 };
 
