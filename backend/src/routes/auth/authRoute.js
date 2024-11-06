@@ -42,7 +42,6 @@ router.post('/google/callback', async (req, res) => {
         role: user.role,
       };
 
-      // Add role-specific properties
       if (user.role === 2) {
         Object.assign(tokenData, {
           reg_no: user.reg_no,
@@ -56,7 +55,7 @@ router.post('/google/callback', async (req, res) => {
       }
 
       const jwtToken = jwt.sign(
-        { exp: Math.floor(Date.now() / 1000) + 60 * 60 }, // 1-hour expiry
+        { exp: Math.floor(Date.now() / 1000) + 60 * 60 }, 
         jwtSecret
       );
 
